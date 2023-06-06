@@ -27,6 +27,7 @@ public class TileBoard : MonoBehaviour
         tile.SetState(tileStates[0], 2);
         tile.Spawn(grid.GetRandomEmptyCell());
         tiles.Add(tile);
+
     }
 }
 
