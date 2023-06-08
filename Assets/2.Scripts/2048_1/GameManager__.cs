@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager__ : MonoBehaviour
 {
     [SerializeField] private int _width = 4;
     [SerializeField] private int _height = 4;
@@ -29,14 +29,14 @@ public class GameManager : MonoBehaviour
     {
         //레벨 생성
         ChangeState(GameState.GenerateLevel);
-        
+
     }
 
     private void ChangeState(GameState newState)
     {
         _state = newState;
 
-        switch(newState)
+        switch (newState)
         {
             case GameState.GenerateLevel:
                 GenerateGrid();
@@ -44,9 +44,9 @@ public class GameManager : MonoBehaviour
             case GameState.SpawningBlocks:
                 SpawnBlocks(_round++ == 0 ? 2 : 1);
                 break;
-            case GameState.WaitingInput: 
+            case GameState.WaitingInput:
                 break;
-            case GameState.Moving: 
+            case GameState.Moving:
                 break;
             case GameState.Win:
                 _winScreen.SetActive(true);
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(_state != GameState.WaitingInput)
+        if (_state != GameState.WaitingInput)
         {
             return;
         }
@@ -94,9 +94,9 @@ public class GameManager : MonoBehaviour
         _blocks = new List<Block>();
         for (int x = 0; x < _width; x++)
         {
-            for(int y = 0; y < _height; y++)
+            for (int y = 0; y < _height; y++)
             {
-                var node = Instantiate(_nodePrefab,new Vector2(x,y),Quaternion.identity);
+                var node = Instantiate(_nodePrefab, new Vector2(x, y), Quaternion.identity);
                 _nodes.Add(node);
             }
         }
@@ -115,24 +115,24 @@ public class GameManager : MonoBehaviour
     {
         var freeNodes = _nodes.Where(n => n.OccupiedBlock == null).OrderBy(b => UnityEngine.Random.value).ToList();
 
-        foreach(var node in freeNodes.Take(amount)) //freeNodes 에서 amount 만큼 가져와서 node에 반복
+        foreach (var node in freeNodes.Take(amount)) //freeNodes 에서 amount 만큼 가져와서 node에 반복
         {
             SpawnBlock(node, UnityEngine.Random.value > 0.8f ? 4 : 2);  //20% 확률로 4 스폰
         }
 
-        if(freeNodes.Count() == 1)
+        if (freeNodes.Count() == 1)
         {
             ChangeState(GameState.Lose);
             return;
         }
 
-        ChangeState(_blocks.Any(b=>b.Value == _winCondition) ? GameState.Win : GameState.WaitingInput);
+        ChangeState(_blocks.Any(b => b.Value == _winCondition) ? GameState.Win : GameState.WaitingInput);
     }
 
     void SpawnBlock(Node node, int value)
     {
         var block = Instantiate(_blockPrefab, node.Pos, Quaternion.identity);
-        block.Init(GetBlockTypeByValue(value));   
+        block.Init(GetBlockTypeByValue(value));
         block.SetBlock(node);
         _blocks.Add(block);
     }
@@ -141,13 +141,13 @@ public class GameManager : MonoBehaviour
     {
         ChangeState(GameState.Moving);
 
-        var orderedBlocks = _blocks.OrderBy(b =>b.Pos.x).ThenBy(b => b.Pos.y).ToList();
-        if(dir == Vector2.right || dir == Vector2.up)
+        var orderedBlocks = _blocks.OrderBy(b => b.Pos.x).ThenBy(b => b.Pos.y).ToList();
+        if (dir == Vector2.right || dir == Vector2.up)
         {
             orderedBlocks.Reverse();
         }
 
-        foreach(var block in orderedBlocks)
+        foreach (var block in orderedBlocks)
         {
             var next = block.Node;
             do
@@ -179,18 +179,18 @@ public class GameManager : MonoBehaviour
 
         var sequence = DOTween.Sequence();
 
-        foreach(var block in orderedBlocks)
+        foreach (var block in orderedBlocks)
         {
             var movePoint = block.MergingBlock != null ? block.MergingBlock.Node.Pos : block.Node.Pos;
 
-            sequence.Insert(0,block.transform.DOMove(block.Node.Pos, _travelTime));
+            sequence.Insert(0, block.transform.DOMove(block.Node.Pos, _travelTime));
         }
 
         sequence.OnComplete(() =>
         {
             foreach (var block in orderedBlocks.Where(b => b.MergingBlock != null))
             {
-                MergeBlocks(block.MergingBlock,block);
+                MergeBlocks(block.MergingBlock, block);
             }
             ChangeState(GameState.SpawningBlocks);
         });
@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
 
     Node GetNodeAtPosition(Vector2 pos)
     {
-        return _nodes.FirstOrDefault(n=>n.Pos == pos);
+        return _nodes.FirstOrDefault(n => n.Pos == pos);
     }
 }
 
