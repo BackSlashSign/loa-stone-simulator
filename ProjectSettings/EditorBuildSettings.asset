@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/1.Scenes/MainMenu.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/1.Scenes/Main.unity
-    guid: 0189da46bb951f94aae7b91cd4f99ceb
+    path: Assets/1.Scenes/StoneCraft.unity
+    guid: 027a31481b24f2b4e95fd5f04f183d45
   m_configObjects: {}

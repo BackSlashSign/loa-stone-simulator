@@ -10,4 +10,13 @@ public class UIManager : MonoBehaviour
         //load Main(1) scene
         SceneManager.LoadScene(1);
     }
+
+    public void ExitButton()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }
